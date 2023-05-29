@@ -1,15 +1,18 @@
 import { ICamera } from "./camera"
+import { IRecharge } from "./game"
 
-export type TLight = {
+export type TLight = IRecharge & {
     code: string
     isOn: boolean
     blocked: boolean
+    toggleIndependent?: boolean
 }
 
-export type TPort = {
+export type TPort = IRecharge & {
     code: string
     isOpen: boolean
     blocked: boolean
+    toggleIndependent?: boolean
 }
 
 export interface IDesk {

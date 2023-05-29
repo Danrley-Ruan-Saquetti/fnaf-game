@@ -13,35 +13,64 @@ export function RepositoryGame(): TRepositoryGame {
                 isOpen: false,
                 cameraActive: 0,
                 map: [],
+                recharge: 0,
+                inRecharge: false,
             },
             battery: 0,
             hour: 0,
         },
         night: 0,
+        running: false,
+        settings: {
+            FPS: 0,
+            desk: {
+                ports: { toggleDependent: false },
+                lights: { toggleDependent: false },
+            },
+        },
     };
 
+    // # Game
     const reset = () => {
         data.animatronics = [];
-        data.desk.lights = [];
-        data.desk.ports = [];
-        data.desk.camera.isOpen = false;
-        data.desk.camera.map = [];
-        data.desk.camera.cameraActive = 0;
-        data.desk.battery = 0;
-        data.desk.hour = 0;
+        data.desk = {
+            lights: [],
+            ports: [],
+            camera: {
+                isOpen: false,
+                map: [],
+                cameraActive: 0,
+                recharge: 0,
+                inRecharge: false,
+            },
+            battery: 0,
+            hour: 0,
+        };
         data.night = 0;
+        data.running = false;
+        data.settings = {
+            FPS: 0,
+            desk: {
+                ports: { toggleDependent: false },
+                lights: { toggleDependent: false },
+            },
+        };
     };
 
-    const start = (dataStart: IRepositoryDataGame) => {
+    const start = (dataStart: Omit<IRepositoryDataGame, "running">) => {
         data.animatronics = dataStart.animatronics;
-        data.desk.lights = dataStart.desk.lights;
-        data.desk.ports = dataStart.desk.ports;
-        data.desk.camera.isOpen = dataStart.desk.camera.isOpen;
-        data.desk.camera.cameraActive = dataStart.desk.camera.cameraActive;
-        data.desk.camera.map = dataStart.desk.camera.map;
-        data.desk.battery = dataStart.desk.battery;
-        data.desk.hour = dataStart.desk.hour;
+        data.desk = dataStart.desk;
         data.night = dataStart.night;
+        data.running = true;
+        data.settings = dataStart.settings;
+    };
+
+    const end = () => {
+        data.running = false;
+    };
+
+    const isRunning = () => {
+        return data.running;
     };
 
     // # desk
@@ -54,7 +83,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Light "${code}" not found`);
         }
 
-        return light
+        return light;
     };
 
     const getIndexByLight = ({ code }: { code: string }) => {
@@ -64,7 +93,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Light "${code}" not found`);
         }
 
-        return index
+        return index;
     };
 
     const updateLight = ({
@@ -82,7 +111,13 @@ export function RepositoryGame(): TRepositoryGame {
 
         data.desk.lights[index] = { ...light, code: where.code };
 
-        return data.desk.lights[index]
+        return data.desk.lights[index];
+    };
+
+    const getLightOpenDependent = () => {
+        return !!data.desk.lights.find(
+            (light) => !light.toggleIndependent && light.inRecharge
+        );
     };
 
     // ## Port
@@ -93,7 +128,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Port "${code}" not found`);
         }
 
-        return port
+        return port;
     };
 
     const getIndexByPort = ({ code }: { code: string }) => {
@@ -103,7 +138,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Port "${code}" not found`);
         }
 
-        return index
+        return index;
     };
 
     const updatePort = ({
@@ -121,18 +156,25 @@ export function RepositoryGame(): TRepositoryGame {
 
         data.desk.ports[index] = { ...port, code: where.code };
 
-        return data.desk.ports[index]
+        return data.desk.ports[index];
+    };
+
+    const getPortOpenDependent = () => {
+        return !!data.desk.ports.find(
+            (port) => !port.toggleIndependent && port.inRecharge
+        );
     };
 
     // ## Animatronic
     const getAnimatronic = ({ name }: { name: string }) => {
-        const animatronic = data.animatronics.find((anima) => anima.name == name) || null;
+        const animatronic =
+            data.animatronics.find((anima) => anima.name == name) || null;
 
         if (!animatronic) {
             console.error(`Animatronic "${name}" not found`);
         }
 
-        return animatronic
+        return animatronic;
     };
 
     const getIndexByAnimatronic = ({ name }: { name: string }) => {
@@ -142,7 +184,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Animatronic "${name}" not found`);
         }
 
-        return index
+        return index;
     };
 
     const updateAnimatronic = ({
@@ -155,12 +197,12 @@ export function RepositoryGame(): TRepositoryGame {
         const index = getIndexByAnimatronic(where);
 
         if (index < 0) {
-            return null
+            return null;
         }
 
         data.animatronics[index] = { ...animatronic, name: where.name };
 
-        return data.animatronics[index]
+        return data.animatronics[index];
     };
 
     // ## Camera
@@ -168,7 +210,7 @@ export function RepositoryGame(): TRepositoryGame {
     const updateCamera = ({ camera }: { camera: ICamera }) => {
         data.desk.camera = camera;
 
-        return data.desk.camera
+        return data.desk.camera;
     };
 
     // ## Battery
@@ -176,7 +218,7 @@ export function RepositoryGame(): TRepositoryGame {
     const updateBattery = ({ battery }: { battery: number }) => {
         data.desk.battery = battery;
 
-        return data.desk.battery
+        return data.desk.battery;
     };
 
     // ## Hour
@@ -184,7 +226,13 @@ export function RepositoryGame(): TRepositoryGame {
     const updateHour = ({ hour }: { hour: number }) => {
         data.desk.hour = hour;
 
-        return data.desk.hour
+        return data.desk.hour;
+    };
+
+    // # Setting
+
+    const getSettings = () => {
+        return data.settings;
     };
 
     return {
@@ -203,5 +251,10 @@ export function RepositoryGame(): TRepositoryGame {
         updateCamera,
         updateBattery,
         updateHour,
+        end,
+        isRunning,
+        getSettings,
+        getPortOpenDependent,
+        getLightOpenDependent,
     };
 }

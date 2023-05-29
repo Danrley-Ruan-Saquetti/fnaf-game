@@ -1,6 +1,11 @@
 import { TRepositoryGame } from "../@types/game";
 
 export function AnimatronicController(repo: TRepositoryGame) {
+    // # Util
+
+    // # Use Case
+
+    // # Repo
     const getAnimatronicByName = ({ name }: { name: string }) => {
         const animatronic =
             repo.data.animatronics.find((anima) => anima.name == name) || null;
@@ -25,9 +30,5 @@ export function AnimatronicController(repo: TRepositoryGame) {
         return { animatronics };
     };
 
-    return {
-        getAnimatronicByName,
-        getAnimatronicByPosition,
-        getAnimatronicsByPosition,
-    };
+    return {};
 }

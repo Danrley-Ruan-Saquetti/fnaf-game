@@ -1,38 +1,64 @@
-import { IEvent } from './../@types/event.d';
-import { IEventTypes } from '../@types/event'
-import { TObserver } from './../@types/observer'
-import { randomId } from './random-id'
+import { IEvent, IEventTypes, IEventData } from "./../@types/event";
+import { ObserverEvent } from "./../@types/observer.d";
+import { randomId } from "./random-id.js";
 
-export function ObserverEvent() {
-    const observers: TObserver[] = []
+export function ObserverEvent(): ObserverEvent {
+    const listeners: ObserverEvent["listeners"] = [];
 
-    const on = (evt: IEventTypes, handler: <T>(data: IEvent<T>) => void) => {
-        const code = randomId()
+    const on: ObserverEvent["on"] = <E extends IEventTypes>(
+        evt: E,
+        handler: <T extends IEventData<E>>(data: IEvent<T>) => void,
+        main?: boolean
+    ) => {
+        const code = randomId();
 
-        observers.push({ evt, handler, code })
+        // @ts-expect-error
+        listeners.push({ evt, handler, code, main });
 
-        return code
-    }
+        return code;
+    };
 
-    const emit = <T>(evt: IEventTypes, data: IEvent<T>) => {
-        observers.filter(_obs => { return _obs.evt == evt }).forEach(_obs => {
-            setTimeout(() => {
-                _obs.handler(data)
-            }, 1)
-        })
-    }
+    const emit: ObserverEvent["emit"] = <
+        U extends IEventTypes,
+        T extends IEventData<U>
+    >(
+        evt: U,
+        data: IEvent<T>
+    ) => {
+        listeners
+            .filter((_obs) => {
+                return _obs.evt == evt;
+            })
+            .forEach((_obs) => {
+                setTimeout(() => {
+                    _obs.handler(data);
+                }, 1);
+            });
+    };
 
-    const removeListener = (code: number) => {
-        const index = observers.findIndex(obs => obs.code == code)
+    const removeListener: ObserverEvent["removeListener"] = (code) => {
+        const index = listeners.findIndex((obs) => obs.code == code);
 
-        if (index < 0) { return }
+        if (index < 0) {
+            return;
+        }
 
-        observers.splice(index, 1)
-    }
+        listeners.splice(index, 1);
+    };
+
+    const clearListeners: ObserverEvent["clearListeners"] = (all) => {
+        if (all) {
+            return listeners.splice(0, listeners.length);
+        }
+
+        return listeners.filter((ev) => ev.main).splice(0, listeners.length);
+    };
 
     return {
         on,
         emit,
-        removeListener
-    }
+        removeListener,
+        listeners,
+        clearListeners,
+    };
 }
