@@ -1,0 +1,17 @@
+{
+    "name": "fanf-browser",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.html",
+    "scripts": {
+        "start": "live-server",
+        "dev": "live-server",
+        "build": "npx tsc -w"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "typescript": "^5.0.4"
+    }
+}
