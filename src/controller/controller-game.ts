@@ -1,13 +1,15 @@
 import { RepositoryGame } from "../repository/repository-game.js";
+import { ObserverEvent } from "../util/observer";
 import { AnimatronicController } from "./controller-animatronic.js";
 import { DeskController } from "./controller-desk.js";
 
 export function GameController() {
   const newGame = () => {
     const repoGame = RepositoryGame();
+    const observer = ObserverEvent()
 
     const animatronicController = AnimatronicController(repoGame);
-    const deskController = DeskController(repoGame);
+    const deskController = DeskController(repoGame, { emit: observer.emit });
 
     const getData = () => repoGame.data;
 
@@ -17,7 +19,7 @@ export function GameController() {
 
     const start = () => {
       repoGame.start({
-        nigth: 1,
+        night: 1,
         animatronics: [
           {
             active: true,
@@ -29,7 +31,7 @@ export function GameController() {
               { position: 5 },
               { position: 8 },
               { position: 11 },
-              { position: 12, atack: true },
+              { position: 12, attack: true },
             ],
             configNights: [],
           },
@@ -42,7 +44,7 @@ export function GameController() {
               { position: 2 },
               { position: 5 },
               { position: 11 },
-              { position: 12, atack: true },
+              { position: 12, attack: true },
             ],
             configNights: [],
           },
@@ -56,7 +58,7 @@ export function GameController() {
               { position: 4 },
               { position: 9 },
               { position: 7 },
-              { position: 10, atack: true },
+              { position: 10, attack: true },
             ],
             configNights: [],
           },
@@ -67,7 +69,7 @@ export function GameController() {
             progress: [
               { position: 6 },
               { position: 7 },
-              { position: 10, atack: true },
+              { position: 10, attack: true },
             ],
             configNights: [],
           },
@@ -110,6 +112,11 @@ export function GameController() {
     return {
       start,
       getData,
+      toggleCamera: deskController.toggleCamera,
+      toggleLight: deskController.toggleLight,
+      togglePort: deskController.togglePort,
+      on: observer.on,
+      removeListener: observer.removeListener
     };
   };
 

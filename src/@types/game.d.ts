@@ -5,7 +5,7 @@ import { IDesk, TLight, TPort } from "./desk"
 export interface IRepositoryDataGame {
     animatronics: IAnimatronic[]
     desk: IDesk
-    nigth: number
+    night: number
 }
 
 export interface TRepositoryGame {
@@ -14,59 +14,47 @@ export interface TRepositoryGame {
     start: (dataStart: IRepositoryDataGame) => void;
     getPort: ({ code }: {
         code: string;
-    }) => {
-        port: TPort | null;
-    };
+    }) => TPort | null;
     getIndexByPort: ({ code }: {
         code: string;
-    }) => {
-        index: number;
-    };
+    }) => number;
     updatePort: ({ where, port, }: {
         where: {
             code: string;
         };
         port: TPort;
-    }) => void;
+    }) => TPort | null
     getLight: ({ code }: {
         code: string;
-    }) => {
-        light: TLight | null;
-    };
+    }) => TLight | null;
     getIndexByLight: ({ code }: {
         code: string;
-    }) => {
-        index: number;
-    };
+    }) => number;
     updateLight: ({ where, light, }: {
         where: {
             code: string;
         };
         light: TLight;
-    }) => void;
+    }) => TLight | null
     getAnimatronic: ({ name }: {
         name: string;
-    }) => {
-        animatronic: IAnimatronic | null;
-    };
+    }) => IAnimatronic | null;
     getIndexByAnimatronic: ({ name }: {
         name: string;
-    }) => {
-        index: number;
-    };
+    }) => number;
     updateAnimatronic: ({ where, animatronic, }: {
         where: {
             name: string;
         };
         animatronic: IAnimatronic;
-    }) => void;
+    }) => IAnimatronic | null
     updateCamera: ({ camera }: {
         camera: ICamera;
-    }) => void;
+    }) => ICamera;
     updateBattery: ({ battery }: {
         battery: number;
-    }) => void;
+    }) => number;
     updateHour: ({ hour }: {
         hour: number;
-    }) => void;
+    }) => number;
 };

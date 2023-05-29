@@ -17,7 +17,7 @@ export function RepositoryGame(): TRepositoryGame {
             battery: 0,
             hour: 0,
         },
-        nigth: 0,
+        night: 0,
     };
 
     const reset = () => {
@@ -29,7 +29,7 @@ export function RepositoryGame(): TRepositoryGame {
         data.desk.camera.cameraActive = 0;
         data.desk.battery = 0;
         data.desk.hour = 0;
-        data.nigth = 0;
+        data.night = 0;
     };
 
     const start = (dataStart: IRepositoryDataGame) => {
@@ -41,7 +41,7 @@ export function RepositoryGame(): TRepositoryGame {
         data.desk.camera.map = dataStart.desk.camera.map;
         data.desk.battery = dataStart.desk.battery;
         data.desk.hour = dataStart.desk.hour;
-        data.nigth = dataStart.nigth;
+        data.night = dataStart.night;
     };
 
     // # desk
@@ -54,7 +54,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Light "${code}" not found`);
         }
 
-        return { light };
+        return light
     };
 
     const getIndexByLight = ({ code }: { code: string }) => {
@@ -64,7 +64,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Light "${code}" not found`);
         }
 
-        return { index };
+        return index
     };
 
     const updateLight = ({
@@ -74,13 +74,15 @@ export function RepositoryGame(): TRepositoryGame {
         where: { code: string };
         light: TLight;
     }) => {
-        const { index } = getIndexByLight(where);
+        const index = getIndexByLight(where);
 
         if (index < 0) {
-            return;
+            return null;
         }
 
         data.desk.lights[index] = { ...light, code: where.code };
+
+        return data.desk.lights[index]
     };
 
     // ## Port
@@ -91,7 +93,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Port "${code}" not found`);
         }
 
-        return { port };
+        return port
     };
 
     const getIndexByPort = ({ code }: { code: string }) => {
@@ -101,7 +103,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Port "${code}" not found`);
         }
 
-        return { index };
+        return index
     };
 
     const updatePort = ({
@@ -111,25 +113,26 @@ export function RepositoryGame(): TRepositoryGame {
         where: { code: string };
         port: TPort;
     }) => {
-        const { index } = getIndexByPort(where);
+        const index = getIndexByPort(where);
 
         if (index < 0) {
-            return;
+            return null;
         }
 
         data.desk.ports[index] = { ...port, code: where.code };
+
+        return data.desk.ports[index]
     };
 
     // ## Animatronic
     const getAnimatronic = ({ name }: { name: string }) => {
-        const animatronic =
-            data.animatronics.find((anima) => anima.name == name) || null;
+        const animatronic = data.animatronics.find((anima) => anima.name == name) || null;
 
         if (!animatronic) {
             console.error(`Animatronic "${name}" not found`);
         }
 
-        return { animatronic };
+        return animatronic
     };
 
     const getIndexByAnimatronic = ({ name }: { name: string }) => {
@@ -139,7 +142,7 @@ export function RepositoryGame(): TRepositoryGame {
             console.error(`Animatronic "${name}" not found`);
         }
 
-        return { index };
+        return index
     };
 
     const updateAnimatronic = ({
@@ -149,31 +152,39 @@ export function RepositoryGame(): TRepositoryGame {
         where: { name: string };
         animatronic: IAnimatronic;
     }) => {
-        const { index } = getIndexByAnimatronic(where);
+        const index = getIndexByAnimatronic(where);
 
         if (index < 0) {
-            return;
+            return null
         }
 
         data.animatronics[index] = { ...animatronic, name: where.name };
+
+        return data.animatronics[index]
     };
 
     // ## Camera
 
     const updateCamera = ({ camera }: { camera: ICamera }) => {
         data.desk.camera = camera;
+
+        return data.desk.camera
     };
 
     // ## Battery
 
     const updateBattery = ({ battery }: { battery: number }) => {
         data.desk.battery = battery;
+
+        return data.desk.battery
     };
 
     // ## Hour
 
     const updateHour = ({ hour }: { hour: number }) => {
         data.desk.hour = hour;
+
+        return data.desk.hour
     };
 
     return {
