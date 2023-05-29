@@ -1,4 +1,4 @@
-import { IRecharge } from "./game"
+import { IRecharge } from './game'
 
 export type TCamera = {
     code: string

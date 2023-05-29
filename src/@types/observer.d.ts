@@ -1,4 +1,4 @@
-import { IEventTypes, IEvent, IEventData } from "./event";
+import { IEventTypes, IEvent, IEventData } from './event'
 
 export type TObserver = { handler: <T>(data: IEvent<T>) => void; evt: IEventTypes; code: number, main?: boolean }
 

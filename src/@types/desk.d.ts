@@ -1,5 +1,5 @@
-import { ICamera } from "./camera"
-import { IRecharge } from "./game"
+import { ICamera } from './camera'
+import { IRecharge } from './game'
 
 export type TLight = IRecharge & {
     code: string

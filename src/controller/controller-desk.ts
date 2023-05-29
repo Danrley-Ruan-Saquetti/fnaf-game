@@ -1,159 +1,156 @@
-import { ICamera } from "../@types/camera";
-import { TLight, TPort } from "../@types/desk";
-import { TRepositoryGame } from "../@types/game";
-import { ObserverEvent } from "../@types/observer";
+import { ICamera } from '../@types/camera'
+import { TLight, TPort } from '../@types/desk'
+import { TRepositoryGame } from '../@types/game'
+import { ObserverEvent } from '../@types/observer'
 
-export function DeskController(
-    repo: TRepositoryGame,
-    EventGame: { emit: ObserverEvent["emit"] }
-) {
+export function DeskController(repo: TRepositoryGame, EventGame: { emit: ObserverEvent['emit'] }) {
     // # Util
     const rechargeCamera = ({ camera }: { camera: ICamera }) => {
-        repo.updateCamera({ camera: { ...camera, inRecharge: true } });
+        repo.updateCamera({ camera: { ...camera, inRecharge: true } })
 
         setTimeout(() => {
-            const { camera } = repo.data.desk;
+            const { camera } = repo.data.desk
 
             repo.updateCamera({
                 camera: { ...camera, inRecharge: false },
-            });
-        }, camera.recharge);
-    };
+            })
+        }, camera.recharge)
+    }
 
     const rechargePort = ({ port }: { port: TPort }) => {
-        repo.updatePort({ where: port, port: { ...port, inRecharge: true } });
+        repo.updatePort({ where: port, port: { ...port, inRecharge: true } })
 
         setTimeout(() => {
-            const p = repo.getPort(port);
+            const p = repo.getPort(port)
 
-            if (!p) {
-                return console.log("!!!!");
-            }
+            if (!p) { return console.log('!!!!') }
 
             repo.updatePort({
                 where: { code: p.code },
                 port: { ...p, inRecharge: false },
-            });
-        }, port.recharge);
-    };
+            })
+        }, port.recharge)
+    }
 
     const rechargeLight = ({ light }: { light: TLight }) => {
-        repo.updateLight({ where: light, light: { ...light, inRecharge: true } });
+        repo.updateLight({ where: light, light: { ...light, inRecharge: true } })
 
         setTimeout(() => {
-            const l = repo.getLight(light);
+            const l = repo.getLight(light)
 
             if (!l) {
-                return console.log("!!!!");
+                return console.log('!!!!')
             }
 
             repo.updateLight({
                 where: { code: l.code },
                 light: { ...l, inRecharge: false },
-            });
-        }, light.recharge);
-    };
+            })
+        }, light.recharge)
+    }
 
     // # Use Case
     const togglePort = ({ code }: { code: string }) => {
         if (!repo.isRunning()) {
-            return;
+            return
         }
 
-        const port = repo.getPort({ code });
+        const port = repo.getPort({ code })
 
         if (!port) {
-            return console.log("!!!!");
+            return console.log('!!!!')
         }
 
         if (
             repo.getSettings().desk.ports.toggleDependent &&
             repo.getPortOpenDependent()
         ) {
-            return;
+            return
         }
 
         if (port.inRecharge) {
-            return;
+            return
         }
 
-        port.isOpen = !port.isOpen;
+        port.isOpen = !port.isOpen
 
-        repo.updatePort({ where: { code }, port });
+        repo.updatePort({ where: { code }, port })
 
-        rechargePort({ port });
+        rechargePort({ port })
 
         const data = {
             data: port,
-            message: `Port "${code}" ${port.isOpen ? "open" : "closed"}`,
-        };
-        EventGame.emit(`desk/ports/toggle`, data);
-        port.isOpen && EventGame.emit(`desk/ports/open`, data);
-        !port.isOpen && EventGame.emit(`desk/ports/close`, data);
-    };
+            message: `Port "${code}" ${port.isOpen ? 'open' : 'closed'}`,
+        }
+        EventGame.emit('desk/ports/toggle', data)
+        port.isOpen && EventGame.emit('desk/ports/open', data)
+        !port.isOpen && EventGame.emit('desk/ports/close', data)
+    }
 
     const toggleLight = ({ code }: { code: string }) => {
         if (!repo.isRunning()) {
-            return;
+            return
         }
 
-        const light = repo.getLight({ code });
+        const light = repo.getLight({ code })
 
         if (!light) {
-            return console.log("!!!!");
+            return console.log('!!!!')
         }
 
         if (
             repo.getSettings().desk.lights.toggleDependent &&
             repo.getLightOpenDependent()
         ) {
-            return;
+            return
         }
 
-        light.isOn = !light.isOn;
+        light.isOn = !light.isOn
 
-        repo.updateLight({ where: { code }, light });
+        repo.updateLight({ where: { code }, light })
 
-        rechargeLight({ light });
+        rechargeLight({ light })
 
         const data = {
             data: light,
-            message: `Light "${code}" ${light.isOn ? "on" : "off"}`,
-        };
-        EventGame.emit(`desk/lights/toggle`, data);
-        light.isOn && EventGame.emit(`desk/lights/on`, data);
-        !light.isOn && EventGame.emit(`desk/lights/off`, data);
-    };
+            message: `Light "${code}" ${light.isOn ? 'on' : 'off'}`,
+        }
+        EventGame.emit('desk/lights/toggle', data)
+        light.isOn && EventGame.emit('desk/lights/on', data)
+        !light.isOn && EventGame.emit('desk/lights/off', data)
+    }
 
     const toggleCamera = () => {
         if (!repo.isRunning()) {
-            return;
+            return
         }
 
-        const { camera } = repo.data.desk;
+        const { camera } = repo.data.desk
 
         if (camera.inRecharge) {
-            return;
+            return
         }
 
-        camera.isOpen = camera.isOpen;
+        camera.isOpen = !camera.isOpen
 
-        repo.updateCamera({ camera });
+        repo.updateCamera({ camera })
 
-        rechargeCamera({ camera });
+        rechargeCamera({ camera })
 
         const data = {
             data: camera,
-            message: `Camera ${camera.isOpen ? "on" : "off"}`,
-        };
-        EventGame.emit(`desk/camera/toggle`, data);
-        camera.isOpen && EventGame.emit(`desk/camera/open`, data);
-        !camera.isOpen && EventGame.emit(`desk/camera/close`, data);
-    };
+            message: `Camera ${camera.isOpen ? 'on' : 'off'}`,
+        }
+        EventGame.emit('desk/camera/toggle', data)
+
+        /* eslint  no-unused-expressions: ["off"] */
+        camera.isOpen && EventGame.emit('desk/camera/open', data)
+        !camera.isOpen && EventGame.emit('desk/camera/close', data)
+    }
 
     return {
         togglePort,
         toggleLight,
         toggleCamera,
-    };
+    }
 }

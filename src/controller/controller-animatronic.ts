@@ -1,4 +1,4 @@
-import { TRepositoryGame } from "../@types/game";
+import { TRepositoryGame } from '../@types/game'
 
 export function AnimatronicController(repo: TRepositoryGame) {
     // # Util
@@ -8,27 +8,27 @@ export function AnimatronicController(repo: TRepositoryGame) {
     // # Repo
     const getAnimatronicByName = ({ name }: { name: string }) => {
         const animatronic =
-            repo.data.animatronics.find((anima) => anima.name == name) || null;
+            repo.data.animatronics.find((anima) => anima.name == name) || null
 
-        return { animatronic };
-    };
+        return { animatronic }
+    }
 
     const getAnimatronicByPosition = ({ position }: { position: number }) => {
         const animatronic =
             repo.data.animatronics.find(
                 (anima) => anima.currentPosition == position
-            ) || null;
+            ) || null
 
-        return { animatronic };
-    };
+        return { animatronic }
+    }
 
     const getAnimatronicsByPosition = ({ position }: { position: number }) => {
         const animatronics = repo.data.animatronics.filter(
             (anima) => anima.currentPosition == position
-        );
+        )
 
-        return { animatronics };
-    };
+        return { animatronics }
+    }
 
-    return {};
+    return {}
 }

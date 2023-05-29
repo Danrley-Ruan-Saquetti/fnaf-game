@@ -1,12 +1,12 @@
-import { GameConfig } from "./@types/game.js";
-import { GameController } from "./controller/controller-game.js";
+import { GameConfig } from './@types/game.js'
+import { GameController } from './controller/controller-game.js'
 
 const SETUP_GAME: GameConfig = {
     night: 1,
     animatronics: [
         {
             active: false,
-            name: "Chica",
+            name: 'Chica',
             currentPosition: 1,
             progress: [
                 { position: 1 },
@@ -20,7 +20,7 @@ const SETUP_GAME: GameConfig = {
         },
         {
             active: false,
-            name: "Freddy",
+            name: 'Freddy',
             currentPosition: 1,
             progress: [
                 { position: 1 },
@@ -33,7 +33,7 @@ const SETUP_GAME: GameConfig = {
         },
         {
             active: false,
-            name: "Bonnie",
+            name: 'Bonnie',
             currentPosition: 1,
             progress: [
                 { position: 1 },
@@ -47,7 +47,7 @@ const SETUP_GAME: GameConfig = {
         },
         {
             active: false,
-            name: "Fox",
+            name: 'Fox',
             currentPosition: 6,
             progress: [
                 { position: 6 },
@@ -64,30 +64,30 @@ const SETUP_GAME: GameConfig = {
             inRecharge: false,
             cameraActive: 1,
             map: [
-                { code: "CAM 1A", position: 1 },
-                { code: "CAM 1B", position: 2 },
-                { code: "CAM 1B", position: 3 },
-                { code: "CAM 5", position: 4 },
-                { code: "CAM 7", position: 5 },
-                { code: "CAM 1C", position: 6 },
-                { code: "CAM 3", position: 7 },
-                { code: "CAM 6", position: 8 },
-                { code: "CAM 2A", position: 9 },
-                { code: "CAM 2B", position: 10 },
-                { code: "CAM 4A", position: 11 },
-                { code: "CAM 4B", position: 12 },
+                { code: 'CAM 1A', position: 1 },
+                { code: 'CAM 1B', position: 2 },
+                { code: 'CAM 1B', position: 3 },
+                { code: 'CAM 5', position: 4 },
+                { code: 'CAM 7', position: 5 },
+                { code: 'CAM 1C', position: 6 },
+                { code: 'CAM 3', position: 7 },
+                { code: 'CAM 6', position: 8 },
+                { code: 'CAM 2A', position: 9 },
+                { code: 'CAM 2B', position: 10 },
+                { code: 'CAM 4A', position: 11 },
+                { code: 'CAM 4B', position: 12 },
             ],
         },
         lights: [
             {
-                code: "desk:left",
+                code: 'desk:left',
                 isOn: false,
                 blocked: false,
                 inRecharge: false,
                 recharge: 1000 * 1,
             },
             {
-                code: "desk:right",
+                code: 'desk:right',
                 isOn: false,
                 blocked: false,
                 inRecharge: false,
@@ -96,14 +96,14 @@ const SETUP_GAME: GameConfig = {
         ],
         ports: [
             {
-                code: "desk:left",
+                code: 'desk:left',
                 isOpen: true,
                 blocked: false,
                 inRecharge: false,
                 recharge: 1000 * 1,
             },
             {
-                code: "desk:right",
+                code: 'desk:right',
                 isOpen: true,
                 blocked: false,
                 inRecharge: false,
@@ -120,38 +120,39 @@ const SETUP_GAME: GameConfig = {
             lights: { toggleDependent: true },
         },
     },
-};
-
-function App() {
-    const gameController = GameController();
-
-    const game = gameController.newGame(SETUP_GAME);
-
-    const MAP_EVENT_ACTIONS: { [x in string]: () => void } = {
-        " ": () => game.toggleCamera(),
-        a: () => game.togglePort({ code: "desk:left" }),
-        d: () => game.togglePort({ code: "desk:right" }),
-        q: () => game.toggleLight({ code: "desk:left" }),
-        e: () => game.toggleLight({ code: "desk:right" }),
-    };
-
-    game.start();
-
-    game.on("game/start", (ev) => console.log(ev));
-    game.on("game/end-game", (ev) => console.log(ev));
-    game.on("desk/camera/close", (ev) => console.log(ev));
-    game.on("desk/camera/open", (ev) => console.log(ev));
-    game.on("desk/camera/toggle", (ev) => { });
-    game.on("desk/lights/off", (ev) => console.log(ev));
-    game.on("desk/lights/on", (ev) => console.log(ev));
-    game.on("desk/lights/toggle", (ev) => { });
-    game.on("desk/ports/close", (ev) => console.log(ev));
-    game.on("desk/ports/open", (ev) => console.log(ev));
-    game.on("desk/ports/toggle", (ev) => { });
-
-    addEventListener("keydown", ({ key }) => {
-        MAP_EVENT_ACTIONS[key] && MAP_EVENT_ACTIONS[key]();
-    });
 }
 
-window.onload = App;
+function App() {
+    const gameController = GameController()
+
+    const game = gameController.newGame(SETUP_GAME)
+
+    const MAP_EVENT_ACTIONS: { [x in string]: () => void } = {
+        ' ': () => game.toggleCamera(),
+        a: () => game.togglePort({ code: 'desk:left' }),
+        d: () => game.togglePort({ code: 'desk:right' }),
+        q: () => game.toggleLight({ code: 'desk:left' }),
+        e: () => game.toggleLight({ code: 'desk:right' }),
+    }
+
+    game.start()
+
+    game.on('game/start', (ev) => console.log(ev))
+    game.on('game/end-game', (ev) => console.log(ev))
+    game.on('desk/camera/close', (ev) => console.log(ev))
+    game.on('desk/camera/open', (ev) => console.log(ev))
+    game.on('desk/camera/toggle', (ev) => { })
+    game.on('desk/lights/off', (ev) => console.log(ev))
+    game.on('desk/lights/on', (ev) => console.log(ev))
+    game.on('desk/lights/toggle', (ev) => { })
+    game.on('desk/ports/close', (ev) => console.log(ev))
+    game.on('desk/ports/open', (ev) => console.log(ev))
+    game.on('desk/ports/toggle', (ev) => { })
+
+    addEventListener('keydown', ({ key }) => {
+        /* eslint  no-unused-expressions: ["off"] */
+        MAP_EVENT_ACTIONS[key] && MAP_EVENT_ACTIONS[key]()
+    })
+}
+
+window.onload = App

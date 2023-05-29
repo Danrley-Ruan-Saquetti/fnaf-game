@@ -1,7 +1,7 @@
-import { IAnimatronic } from "./animatronic"
-import { ICamera } from "./camera"
-import { IDesk, TLight, TPort } from "./desk"
-import { ISettingGame } from "./setting"
+import { IAnimatronic } from './animatronic'
+import { ICamera } from './camera'
+import { IDesk, TLight, TPort } from './desk'
+import { ISettingGame } from './setting'
 
 export interface IRecharge {
     recharge: number
@@ -16,14 +16,14 @@ export interface IRepositoryDataGame {
     settings: ISettingGame
 }
 
-export type GameConfig = Omit<IRepositoryDataGame, "running">
+export type GameConfig = Omit<IRepositoryDataGame, 'running'>
 
 export interface TRepositoryGame {
     data: IRepositoryDataGame;
     reset: () => void;
     end: () => void;
     isRunning: () => boolean
-    start: (dataStart: Omit<IRepositoryDataGame, "running">) => void;
+    start: (dataStart: Omit<IRepositoryDataGame, 'running'>) => void;
     getPort: ({ code }: {
         code: string;
     }) => TPort | null;
