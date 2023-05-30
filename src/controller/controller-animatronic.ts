@@ -7,17 +7,13 @@ export function AnimatronicController(repo: TRepositoryGame) {
 
     // # Repo
     const getAnimatronicByName = ({ name }: { name: string }) => {
-        const animatronic =
-            repo.data.animatronics.find((anima) => anima.name == name) || null
+        const animatronic = repo.data.animatronics.find((anima) => anima.name == name) || null
 
         return { animatronic }
     }
 
     const getAnimatronicByPosition = ({ position }: { position: number }) => {
-        const animatronic =
-            repo.data.animatronics.find(
-                (anima) => anima.currentPosition == position
-            ) || null
+        const animatronic = repo.data.animatronics.find((anima) => anima.currentPosition == position) || null
 
         return { animatronic }
     }

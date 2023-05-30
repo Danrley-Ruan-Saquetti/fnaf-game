@@ -73,6 +73,10 @@ export function RepositoryGame(): TRepositoryGame {
         return data.running
     }
 
+    const setNight = (night: number) => {
+        data.night = night
+    }
+
     // # desk
 
     // ## Light
@@ -240,6 +244,7 @@ export function RepositoryGame(): TRepositoryGame {
         reset,
         start,
         getPort,
+        setNight,
         getIndexByPort,
         updatePort,
         getLight,

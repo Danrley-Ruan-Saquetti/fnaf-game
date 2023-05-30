@@ -24,6 +24,7 @@ export interface TRepositoryGame {
     end: () => void;
     isRunning: () => boolean
     start: (dataStart: Omit<IRepositoryDataGame, 'running'>) => void;
+    setNight: (night: number) => void
     getPort: ({ code }: {
         code: string;
     }) => TPort | null;

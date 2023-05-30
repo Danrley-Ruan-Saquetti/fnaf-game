@@ -7,54 +7,54 @@ const SETUP_GAME: GameConfig = {
         {
             active: false,
             name: 'Chica',
-            currentPosition: 1,
+            currentPosition: { position: 1, path: 1 },
             progress: [
-                { position: 1 },
-                { position: 2 },
-                { position: 5 },
-                { position: 8 },
-                { position: 11 },
-                { position: 12, attack: true },
+                { position: 1, paths: [] },
+                { position: 2, paths: [] },
+                { position: 5, paths: [] },
+                { position: 8, paths: [] },
+                { position: 11, paths: [] },
+                { position: 12, paths: [] },
             ],
-            configNights: [],
+            config: { nights: [] },
         },
         {
             active: false,
             name: 'Freddy',
-            currentPosition: 1,
+            currentPosition: { position: 1, path: 1 },
             progress: [
-                { position: 1 },
-                { position: 2 },
-                { position: 5 },
-                { position: 11 },
-                { position: 12, attack: true },
+                { position: 1, paths: [] },
+                { position: 2, paths: [] },
+                { position: 5, paths: [] },
+                { position: 11, paths: [] },
+                { position: 12, paths: [] },
             ],
-            configNights: [],
+            config: { nights: [] },
         },
         {
             active: false,
             name: 'Bonnie',
-            currentPosition: 1,
+            currentPosition: { position: 1, path: 1 },
             progress: [
-                { position: 1 },
-                { position: 2 },
-                { position: 4 },
-                { position: 9 },
-                { position: 7 },
-                { position: 10, attack: true },
+                { position: 1, paths: [] },
+                { position: 2, paths: [] },
+                { position: 4, paths: [] },
+                { position: 9, paths: [] },
+                { position: 7, paths: [] },
+                { position: 10, paths: [] },
             ],
-            configNights: [],
+            config: { nights: [] },
         },
         {
             active: false,
             name: 'Fox',
-            currentPosition: 6,
+            currentPosition: { position: 6, path: 1 },
             progress: [
-                { position: 6 },
-                { position: 7 },
-                { position: 10, attack: true },
+                { position: 6, paths: [] },
+                { position: 7, paths: [] },
+                { position: 10, paths: [] },
             ],
-            configNights: [],
+            config: { nights: [] },
         },
     ],
     desk: {
@@ -101,6 +101,7 @@ const SETUP_GAME: GameConfig = {
                 blocked: false,
                 inRecharge: false,
                 recharge: 1000 * 1,
+                position: 10,
             },
             {
                 code: 'desk:right',
@@ -108,6 +109,15 @@ const SETUP_GAME: GameConfig = {
                 blocked: false,
                 inRecharge: false,
                 recharge: 1000 * 1,
+                position: 12,
+            },
+            {
+                code: 'CAM 1B:piping',
+                isOpen: true,
+                blocked: false,
+                inRecharge: false,
+                recharge: 1000 * 1,
+                position: 12,
             },
         ],
         battery: 100,
@@ -123,9 +133,9 @@ const SETUP_GAME: GameConfig = {
 }
 
 function App() {
-    const gameController = GameController()
+    const gameController = GameController(SETUP_GAME)
 
-    const game = gameController.newGame(SETUP_GAME)
+    const game = gameController.newGame()
 
     const MAP_EVENT_ACTIONS: { [x in string]: () => void } = {
         ' ': () => game.toggleCamera(),
@@ -135,7 +145,7 @@ function App() {
         e: () => game.toggleLight({ code: 'desk:right' }),
     }
 
-    game.start()
+    game.startNight()
 
     game.on('game/start', (ev) => console.log(ev))
     game.on('game/end-game', (ev) => console.log(ev))
@@ -153,6 +163,8 @@ function App() {
         /* eslint  no-unused-expressions: ["off"] */
         MAP_EVENT_ACTIONS[key] && MAP_EVENT_ACTIONS[key]()
     })
+
+    console.log(game.getData())
 }
 
 window.onload = App

@@ -11,9 +11,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
         setTimeout(() => {
             const { camera } = repo.data.desk
 
-            repo.updateCamera({
-                camera: { ...camera, inRecharge: false },
-            })
+            repo.updateCamera({ camera: { ...camera, inRecharge: false }, })
         }, camera.recharge)
     }
 
@@ -25,10 +23,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
 
             if (!p) { return console.log('!!!!') }
 
-            repo.updatePort({
-                where: { code: p.code },
-                port: { ...p, inRecharge: false },
-            })
+            repo.updatePort({ where: { code: p.code }, port: { ...p, inRecharge: false }, })
         }, port.recharge)
     }
 
@@ -38,39 +33,23 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
         setTimeout(() => {
             const l = repo.getLight(light)
 
-            if (!l) {
-                return console.log('!!!!')
-            }
+            if (!l) { return console.log('!!!!') }
 
-            repo.updateLight({
-                where: { code: l.code },
-                light: { ...l, inRecharge: false },
-            })
+            repo.updateLight({ where: { code: l.code }, light: { ...l, inRecharge: false }, })
         }, light.recharge)
     }
 
     // # Use Case
     const togglePort = ({ code }: { code: string }) => {
-        if (!repo.isRunning()) {
-            return
-        }
+        if (!repo.isRunning()) { return }
 
         const port = repo.getPort({ code })
 
-        if (!port) {
-            return console.log('!!!!')
-        }
+        if (!port) { return console.log('!!!!') }
 
-        if (
-            repo.getSettings().desk.ports.toggleDependent &&
-            repo.getPortOpenDependent()
-        ) {
-            return
-        }
+        if (repo.getSettings().desk.ports.toggleDependent && repo.getPortOpenDependent()) { return }
 
-        if (port.inRecharge) {
-            return
-        }
+        if (port.inRecharge) { return }
 
         port.isOpen = !port.isOpen
 
@@ -78,32 +57,21 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
 
         rechargePort({ port })
 
-        const data = {
-            data: port,
-            message: `Port "${code}" ${port.isOpen ? 'open' : 'closed'}`,
-        }
+        const data = { data: port, message: `Port "${code}" ${port.isOpen ? 'open' : 'closed'}`, }
+
         EventGame.emit('desk/ports/toggle', data)
         port.isOpen && EventGame.emit('desk/ports/open', data)
         !port.isOpen && EventGame.emit('desk/ports/close', data)
     }
 
     const toggleLight = ({ code }: { code: string }) => {
-        if (!repo.isRunning()) {
-            return
-        }
+        if (!repo.isRunning()) { return }
 
         const light = repo.getLight({ code })
 
-        if (!light) {
-            return console.log('!!!!')
-        }
+        if (!light) { return console.log('!!!!') }
 
-        if (
-            repo.getSettings().desk.lights.toggleDependent &&
-            repo.getLightOpenDependent()
-        ) {
-            return
-        }
+        if (repo.getSettings().desk.lights.toggleDependent && repo.getLightOpenDependent()) { return }
 
         light.isOn = !light.isOn
 
@@ -111,25 +79,18 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
 
         rechargeLight({ light })
 
-        const data = {
-            data: light,
-            message: `Light "${code}" ${light.isOn ? 'on' : 'off'}`,
-        }
+        const data = { data: light, message: `Light "${code}" ${light.isOn ? 'on' : 'off'}`, }
         EventGame.emit('desk/lights/toggle', data)
         light.isOn && EventGame.emit('desk/lights/on', data)
         !light.isOn && EventGame.emit('desk/lights/off', data)
     }
 
     const toggleCamera = () => {
-        if (!repo.isRunning()) {
-            return
-        }
+        if (!repo.isRunning()) { return }
 
         const { camera } = repo.data.desk
 
-        if (camera.inRecharge) {
-            return
-        }
+        if (camera.inRecharge) { return }
 
         camera.isOpen = !camera.isOpen
 
@@ -137,10 +98,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
 
         rechargeCamera({ camera })
 
-        const data = {
-            data: camera,
-            message: `Camera ${camera.isOpen ? 'on' : 'off'}`,
-        }
+        const data = { data: camera, message: `Camera ${camera.isOpen ? 'on' : 'off'}`, }
         EventGame.emit('desk/camera/toggle', data)
 
         /* eslint  no-unused-expressions: ["off"] */

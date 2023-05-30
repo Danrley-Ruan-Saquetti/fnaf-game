@@ -12,6 +12,7 @@ export type TPort = IRecharge & {
     code: string
     isOpen: boolean
     blocked: boolean
+    position: number
     toggleIndependent?: boolean
 }
 

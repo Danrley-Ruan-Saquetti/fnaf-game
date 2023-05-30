@@ -5,20 +5,20 @@ import { ObserverEvent } from '../util/observer.js'
 import { AnimatronicController } from './controller-animatronic.js'
 import { DeskController } from './controller-desk.js'
 
-export function GameController() {
-  const newGame = (gameConfig: GameConfig) => {
-    const repoGame = RepositoryGame()
-    const observer = ObserverEvent()
+export function GameController(gameConfig: GameConfig) {
+  const repoGame = RepositoryGame()
+  const observer = ObserverEvent()
 
+  const newGame = () => {
     const animatronicController = AnimatronicController(repoGame)
     const deskController = DeskController(repoGame, { emit: observer.emit })
 
-    const getData = () => ({ ...repoGame.data, listeners: observer.listeners })
+    const getData = () => { return { ...repoGame.data, listeners: observer.listeners.filter(lis => !lis.main).map(lis => ({ code: lis.code, evt: lis.evt, handler: lis.handler })) } }
 
     const setup = () => {
       repoGame.reset()
 
-      observer.clearListeners()
+      observer.clearListeners(true)
 
       observer.on('game/start', (ev) => { }, true)
       observer.on('game/end-game', (ev) => { }, true)
@@ -33,27 +33,22 @@ export function GameController() {
       observer.on('desk/ports/toggle', (ev) => { }, true)
     }
 
-    const start = () => {
+    const startNight = (night?: number) => {
       setup()
 
       repoGame.start(gameConfig)
+      repoGame.setNight(night || repoGame.data.night)
 
-      observer.emit('game/start', {
-        data: repoGame.data,
-        message: 'Game Start',
-      })
+      observer.emit('game/start', { data: repoGame.data, message: 'Game Start', })
     }
 
     return {
-      start,
+      startNight,
       getData,
       toggleCamera: deskController.toggleCamera,
       toggleLight: deskController.toggleLight,
       togglePort: deskController.togglePort,
-      on: <E extends IEventTypes>(
-        evt: E,
-        handler: <T extends IEventData<E>>(data: IEvent<T>) => void
-      ) => observer.on(evt, handler),
+      on: <E extends IEventTypes>(evt: E, handler: <T extends IEventData<E>>(data: IEvent<T>) => void) => observer.on(evt, handler),
       removeListener: observer.removeListener,
       clearListeners: () => observer.clearListeners(),
     }

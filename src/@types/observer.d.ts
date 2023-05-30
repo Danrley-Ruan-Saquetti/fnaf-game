@@ -6,7 +6,7 @@ export interface ObserverEvent {
     on: <E extends IEventTypes>(evt: E, handler: <T extends IEventData<E>>(data: IEvent<T>) => void, main?: boolean) => number
     emit: <U extends IEventTypes, T extends IEventData<U>>(evt: U, data: IEvent<T>) => void
     removeListener: (code: number) => void
-    clearListeners: (all?: boolean) => void
+    clearListeners: (main?: boolean) => void
     listeners: TObserver[]
 }
 
