@@ -4,14 +4,14 @@ import { IRecharge } from './game'
 export type TLight = IRecharge & {
     code: string
     isOn: boolean
-    blocked: boolean
+    blocked?: boolean
     toggleIndependent?: boolean
 }
 
 export type TPort = IRecharge & {
     code: string
     isOpen: boolean
-    blocked: boolean
+    blocked?: boolean
     position: number
     toggleIndependent?: boolean
 }

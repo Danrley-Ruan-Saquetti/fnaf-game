@@ -5,7 +5,7 @@ import { ISettingGame } from './setting'
 
 export interface IRecharge {
     recharge: number
-    inRecharge: boolean
+    inRecharge?: boolean
 }
 
 export interface IRepositoryDataGame {

@@ -171,8 +171,7 @@ export function RepositoryGame(): TRepositoryGame {
 
     // ## Animatronic
     const getAnimatronic = ({ name }: { name: string }) => {
-        const animatronic =
-            data.animatronics.find((anima) => anima.name == name) || null
+        const animatronic = data.animatronics.find((anima) => anima.name == name) || null
 
         if (!animatronic) {
             console.error(`Animatronic "${name}" not found`)
@@ -200,9 +199,7 @@ export function RepositoryGame(): TRepositoryGame {
     }) => {
         const index = getIndexByAnimatronic(where)
 
-        if (index < 0) {
-            return null
-        }
+        if (index < 0) { return null }
 
         data.animatronics[index] = { ...animatronic, name: where.name }
 

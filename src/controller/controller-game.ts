@@ -40,6 +40,8 @@ export function GameController(gameConfig: GameConfig) {
       repoGame.setNight(night || repoGame.data.night)
 
       observer.emit('game/start', { data: repoGame.data, message: 'Game Start', })
+
+      animatronicController.getPathByAnimatronic({ name: 'Bonnie' })
     }
 
     return {
