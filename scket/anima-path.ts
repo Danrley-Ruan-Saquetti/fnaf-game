@@ -3,39 +3,45 @@ console.clear()
 const animatronic: {
     currentPosition: { position: number, path: number },
     config: { retreatPositionsTime: number, nights: { night: number, activationTime: number, rates: { advance: number, retreat: number, attack: number } }[] },
-    mapPath: { position: number, paths: { path: number, order: number }[], attack?: boolean }[]
+    mapPath: { stage: number, position: number, paths: { path: number, order: number }[], attack?: boolean }[]
 } = {
-    currentPosition: { position: 7, path: 0 },
+    currentPosition: { position: 8, path: 0 },
     mapPath: [
         {
+            stage: 0,
             position: 0, paths: [
                 { path: 0, order: 0 }
             ]
         },
         {
+            stage: 5,
             position: 1, paths: [
                 { path: 0, order: 1 },
                 { path: 1, order: 0 }
             ]
         },
         {
+            stage: 5,
             position: 2, paths: [
                 { path: 1, order: 1 }
             ]
         },
         {
+            stage: 8,
             position: 7, paths: [
                 { path: 0, order: 2 },
                 { path: 2, order: 0 }
             ]
         },
         {
+            stage: 8,
             position: 5, paths: [
                 { path: 2, order: 1 }
             ]
         },
         {
             attack: true,
+            stage: 10,
             position: 8,
             paths: [
                 { path: 0, order: 3 }
@@ -43,7 +49,7 @@ const animatronic: {
         },
     ],
     config: {
-        retreatPositionsTime: 2,
+        retreatPositionsTime: 3,
         nights: [{
             night: 1,
             activationTime: 0,
@@ -56,27 +62,20 @@ const animatronic: {
     },
 }
 
-type IMapPath = { position: number, path: number, order: number, }
+type IMapPath = { position: number, path: number, stage: number }
 
 const getMapPaths = () => {
     const paths: { [x: number]: IMapPath[] } = {}
-    const test: { [x: number]: IMapPath[] } = {}
 
     animatronic.mapPath.forEach(_map => {
         _map.paths.forEach(_path => {
             if (!paths[_path.path]) {
                 paths[_path.path] = []
             }
-            if (!test[_map.position]) {
-                test[_map.position] = []
-            }
 
-            paths[_path.path].push({ position: _map.position, ..._path })
-            test[_map.position].push({ position: _map.position, ..._path })
+            paths[_path.path].push({ position: _map.position, ..._path, stage: _map.stage })
         })
     })
-
-    console.log(test)
 
     return paths
 }
@@ -85,72 +84,33 @@ const getPathByAnimatronic = () => {
     const allPaths = getMapPaths()
 
     const allPathsEnables: { [x: number]: IMapPath[] } = {}
-    const currentPath: { [x: number]: IMapPath[] } = {}
 
     const indexCurrentPosition = allPaths[animatronic.currentPosition.path].findIndex(path => path.position == animatronic.currentPosition.position)
+    const currentPosition = allPaths[animatronic.currentPosition.path][indexCurrentPosition]
 
-    for (let i = 0; i <= animatronic.config.retreatPositionsTime; i++) {
-        const path = allPaths[animatronic.currentPosition.path][indexCurrentPosition - i]
-        if (!path) { continue }
+    for (const _p in allPaths) {
+        for (let j = 0; j < allPaths[_p].length; j++) {
+            const _path = allPaths[_p][j]
 
-        if (i == 0) {
-            const index = allPaths[path.path].findIndex(path => path.position == animatronic.currentPosition.position)
+            if (_path.position == currentPosition.position) { continue }
 
-            continue
-        }
+            if (_path.stage > currentPosition.stage) { continue }
 
-        if (!currentPath[path.path]) { currentPath[path.path] = [] }
-        if (!allPathsEnables[path.path]) { allPathsEnables[path.path] = [] }
+            if (!allPathsEnables[_path.path]) { allPathsEnables[_path.path] = [] }
 
-        currentPath[path.path].push(path)
-        allPathsEnables[path.path].push(path)
-    }
-
-
-    for (const i in currentPath) {
-        const pathsEnable = currentPath[i]
-
-        for (let j = 0; j < pathsEnable.length; j++) {
-            const path = pathsEnable[j]
-
-            for (const k in allPaths) {
-                const _allPath = allPaths[k]
-
-                let isAccept = false
-
-                for (let l = 0; l < _allPath.length; l++) {
-                    const p = _allPath[l]
-
-                    if (p.path == path.path) { continue }
-
-                    if (p.position == animatronic.currentPosition.position) { continue }
-
-                    if (p.position == path.position) {
-                        if (!isAccept) {
-                            isAccept = true
-
-                            continue
-                        }
-                    }
-
-                    if (!isAccept) { continue }
-
-                    if (!allPathsEnables[p.path]) { allPathsEnables[p.path] = [] }
-
-                    allPathsEnables[p.path].push(p)
-                }
-            }
+            allPathsEnables[_path.path].push(_path)
+            break
         }
     }
 
-    return Object.keys(allPathsEnables).reduce<Omit<IMapPath, "order">[]>((acc, i, _, arr) => {
+    return Object.keys(allPathsEnables).reduce<IMapPath[]>((acc, i) => {
         acc = [
             ...acc,
-            ...allPathsEnables[Number(i)].map(path => ({ path: path.path, position: path.position }))
+            ...allPathsEnables[Number(i)].map(path => ({ path: path.path, position: path.position, stage: path.stage }))
         ]
 
         return acc
-    }, [])
+    }, []).sort((a, b) => b.stage - a.stage).slice(0, animatronic.config.retreatPositionsTime)
 }
 
 const pathsAnima = getPathByAnimatronic()
