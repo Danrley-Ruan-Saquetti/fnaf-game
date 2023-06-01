@@ -9,27 +9,49 @@ const SETUP_GAME: GameConfig = {
             name: 'Chica',
             currentPosition: { position: 0, path: 0 },
             mapPath: [
-                { position: 0, paths: [] },
-                { position: 1, paths: [] },
-                { position: 3, paths: [] },
-                { position: 6, paths: [] },
-                { position: 9, paths: [] },
-                { position: 10, paths: [] },
+                { stage: 0, position: 0, paths: [] },
+                { stage: 0, position: 1, paths: [] },
+                { stage: 0, position: 3, paths: [] },
+                { stage: 0, position: 6, paths: [] },
+                { stage: 0, position: 9, paths: [] },
+                { stage: 0, position: 10, paths: [] },
             ],
-            config: { nights: [] },
+            config: {
+                retreatPositionsTime: 3,
+                nights: [{
+                    night: 1,
+                    activationTime: 0,
+                    rates: {
+                        retreat: 45,
+                        advance: 25,
+                        attack: 10,
+                    }
+                }]
+            },
         },
         {
             active: false,
             name: 'Freddy',
             currentPosition: { position: 0, path: 0 },
             mapPath: [
-                { position: 0, paths: [] },
-                { position: 1, paths: [] },
-                { position: 2, paths: [] },
-                { position: 9, paths: [] },
-                { position: 10, paths: [] },
+                { stage: 0, position: 0, paths: [] },
+                { stage: 0, position: 1, paths: [] },
+                { stage: 0, position: 2, paths: [] },
+                { stage: 0, position: 9, paths: [] },
+                { stage: 0, position: 10, paths: [] },
             ],
-            config: { nights: [] },
+            config: {
+                retreatPositionsTime: 3,
+                nights: [{
+                    night: 1,
+                    activationTime: 0,
+                    rates: {
+                        retreat: 45,
+                        advance: 25,
+                        attack: 10,
+                    }
+                }]
+            },
         },
         {
             active: false,
@@ -37,34 +59,40 @@ const SETUP_GAME: GameConfig = {
             currentPosition: { position: 8, path: 0 },
             mapPath: [
                 {
+                    stage: 0,
                     position: 0, paths: [
                         { path: 0, order: 0 }
                     ]
                 },
                 {
+                    stage: 5,
                     position: 1, paths: [
                         { path: 0, order: 1 },
                         { path: 1, order: 0 }
                     ]
                 },
                 {
+                    stage: 5,
                     position: 2, paths: [
                         { path: 1, order: 1 }
                     ]
                 },
                 {
+                    stage: 8,
                     position: 7, paths: [
                         { path: 0, order: 2 },
                         { path: 2, order: 0 }
                     ]
                 },
                 {
+                    stage: 8,
                     position: 5, paths: [
                         { path: 2, order: 1 }
                     ]
                 },
                 {
                     attack: true,
+                    stage: 10,
                     position: 8,
                     paths: [
                         { path: 0, order: 3 }
@@ -72,8 +100,10 @@ const SETUP_GAME: GameConfig = {
                 },
             ],
             config: {
+                retreatPositionsTime: 3,
                 nights: [{
-                    activationTime: 0, night: 1,
+                    night: 1,
+                    activationTime: 0,
                     rates: {
                         retreat: 45,
                         advance: 25,
@@ -87,11 +117,22 @@ const SETUP_GAME: GameConfig = {
             name: 'Fox',
             currentPosition: { position: 5, path: 0 },
             mapPath: [
-                { position: 5, paths: [] },
-                { position: 6, paths: [] },
-                { position: 9, paths: [] },
+                { stage: 0, position: 5, paths: [] },
+                { stage: 0, position: 6, paths: [] },
+                { stage: 0, position: 9, paths: [] },
             ],
-            config: { nights: [] },
+            config: {
+                retreatPositionsTime: 3,
+                nights: [{
+                    night: 1,
+                    activationTime: 0,
+                    rates: {
+                        retreat: 45,
+                        advance: 25,
+                        attack: 10,
+                    }
+                }]
+            },
         },
     ],
     desk: {

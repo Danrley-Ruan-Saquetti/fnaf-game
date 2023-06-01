@@ -1,17 +1,15 @@
 export interface IAnimatronic {
     active: boolean
     name: string
-    currentPosition: { position: number, path: number }
-    mapPath: { position: number, attack?: boolean, paths: { path: number, order: number }[] }[]
+    currentPosition: { position: number, path: number },
     config: {
-        nights: {
-            night: number,
-            activationTime: number,
-            rates: {
-                advance: number
-                retreat: number
-                attack: number
-            }
-        }[]
-    }
+        retreatPositionsTime: number,
+        nights: { night: number, activationTime: number, rates: { advance: number, retreat: number, attack: number } }[]
+    },
+    mapPath: {
+        stage: number,
+        position: number,
+        paths: { path: number, order: number }[],
+        attack?: boolean
+    }[]
 }
