@@ -81,7 +81,7 @@ export function RepositoryGame(): TRepositoryGame {
 
     // ## Light
     const getLight = ({ code }: { code: string }) => {
-        const light = data.desk.lights.find((light) => light.code == code) || null
+        const light = data.desk.lights.find(light => light.code == code) || null
 
         if (!light) {
             console.error(`Light "${code}" not found`)
@@ -91,7 +91,7 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     const getIndexByLight = ({ code }: { code: string }) => {
-        const index = data.desk.lights.findIndex((light) => light.code == code)
+        const index = data.desk.lights.findIndex(light => light.code == code)
 
         if (index < 0) {
             console.error(`Light "${code}" not found`)
@@ -100,13 +100,7 @@ export function RepositoryGame(): TRepositoryGame {
         return index
     }
 
-    const updateLight = ({
-        where,
-        light,
-    }: {
-        where: { code: string };
-        light: TLight;
-    }) => {
+    const updateLight = ({ where, light }: { where: { code: string }; light: TLight }) => {
         const index = getIndexByLight(where)
 
         if (index < 0) {
@@ -119,14 +113,12 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     const getLightOpenDependent = () => {
-        return !!data.desk.lights.find(
-            (light) => !light.toggleIndependent && light.inRecharge
-        )
+        return !!data.desk.lights.find(light => !light.toggleIndependent && light.inRecharge)
     }
 
     // ## Port
     const getPort = ({ code }: { code: string }) => {
-        const port = data.desk.ports.find((port) => port.code == code) || null
+        const port = data.desk.ports.find(port => port.code == code) || null
 
         if (!port) {
             console.error(`Port "${code}" not found`)
@@ -136,7 +128,7 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     const getIndexByPort = ({ code }: { code: string }) => {
-        const index = data.desk.ports.findIndex((port) => port.code == code)
+        const index = data.desk.ports.findIndex(port => port.code == code)
 
         if (index < 0) {
             console.error(`Port "${code}" not found`)
@@ -145,13 +137,7 @@ export function RepositoryGame(): TRepositoryGame {
         return index
     }
 
-    const updatePort = ({
-        where,
-        port,
-    }: {
-        where: { code: string };
-        port: TPort;
-    }) => {
+    const updatePort = ({ where, port }: { where: { code: string }; port: TPort }) => {
         const index = getIndexByPort(where)
 
         if (index < 0) {
@@ -163,15 +149,9 @@ export function RepositoryGame(): TRepositoryGame {
         return data.desk.ports[index]
     }
 
-    const getPortOpenDependent = () => {
-        return !!data.desk.ports.find(
-            (port) => !port.toggleIndependent && port.inRecharge
-        )
-    }
-
     // ## Animatronic
     const getAnimatronic = ({ name }: { name: string }) => {
-        const animatronic = data.animatronics.find((anima) => anima.name == name) || null
+        const animatronic = data.animatronics.find(anima => anima.name == name) || null
 
         if (!animatronic) {
             console.error(`Animatronic "${name}" not found`)
@@ -181,7 +161,7 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     const getIndexByAnimatronic = ({ name }: { name: string }) => {
-        const index = data.animatronics.findIndex((anima) => anima.name == name)
+        const index = data.animatronics.findIndex(anima => anima.name == name)
 
         if (index < 0) {
             console.error(`Animatronic "${name}" not found`)
@@ -190,16 +170,12 @@ export function RepositoryGame(): TRepositoryGame {
         return index
     }
 
-    const updateAnimatronic = ({
-        where,
-        animatronic,
-    }: {
-        where: { name: string };
-        animatronic: IAnimatronic;
-    }) => {
+    const updateAnimatronic = ({ where, animatronic }: { where: { name: string }; animatronic: IAnimatronic }) => {
         const index = getIndexByAnimatronic(where)
 
-        if (index < 0) { return null }
+        if (index < 0) {
+            return null
+        }
 
         data.animatronics[index] = { ...animatronic, name: where.name }
 
@@ -256,7 +232,6 @@ export function RepositoryGame(): TRepositoryGame {
         end,
         isRunning,
         getSettings,
-        getPortOpenDependent,
         getLightOpenDependent,
     }
 }

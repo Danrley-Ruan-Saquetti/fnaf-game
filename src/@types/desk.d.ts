@@ -6,6 +6,10 @@ export type TLight = IRecharge & {
     isOn: boolean
     blocked?: boolean
     toggleIndependent?: boolean
+    position: number
+    config: {
+        toggleIndependentOfPort?: boolean
+    }
 }
 
 export type TPort = IRecharge & {

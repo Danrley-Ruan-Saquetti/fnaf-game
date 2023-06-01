@@ -71,6 +71,5 @@ export interface TRepositoryGame {
         hour: number;
     }) => number;
     getSettings: () => ISettingGame
-    getPortOpenDependent: () => boolean
     getLightOpenDependent: () => boolean
 };

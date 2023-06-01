@@ -1,18 +1,18 @@
 import { IAnimatronic } from '../@types/animatronic'
 import { TRepositoryGame } from '../@types/game'
 
-type IMapPath = { position: number, path: number, stage: number }
+type IMapPath = { position: number; path: number; stage: number }
 
 export function AnimatronicController(repo: TRepositoryGame) {
     // # Util
     const getAnimatronicByPosition = ({ position }: { position: number }) => {
-        const animatronic = repo.data.animatronics.find((anima) => anima.currentPosition.position == position) || null
+        const animatronic = repo.data.animatronics.find(anima => anima.currentPosition.position == position) || null
 
         return animatronic
     }
 
     const getAnimatronicsByPosition = ({ position }: { position: number }) => {
-        const animatronics = repo.data.animatronics.filter((anima) => anima.currentPosition.position == position)
+        const animatronics = repo.data.animatronics.filter(anima => anima.currentPosition.position == position)
 
         return animatronics
     }
@@ -35,11 +35,11 @@ export function AnimatronicController(repo: TRepositoryGame) {
     }
 
     const getPathByAnimatronic = ({ name }: { name: string }) => {
-
         const animatronic = repo.getAnimatronic({ name })
 
         if (!animatronic) {
-            return console.log('!!!!')
+            console.log('!!!!')
+            return []
         }
 
         const allPaths = getMapPaths({ animatronic })
@@ -53,28 +53,34 @@ export function AnimatronicController(repo: TRepositoryGame) {
             for (let j = 0; j < allPaths[_p].length; j++) {
                 const _path = allPaths[_p][j]
 
-                if (_path.position == currentPosition.position) { continue }
+                if (_path.position == currentPosition.position) {
+                    continue
+                }
 
-                if (_path.stage > currentPosition.stage) { continue }
+                if (_path.stage > currentPosition.stage) {
+                    continue
+                }
 
-                if (!allPathsEnables[_path.path]) { allPathsEnables[_path.path] = [] }
+                if (!allPathsEnables[_path.path]) {
+                    allPathsEnables[_path.path] = []
+                }
 
                 allPathsEnables[_path.path].push(_path)
                 break
             }
         }
 
-        return Object.keys(allPathsEnables).reduce<IMapPath[]>((acc, i) => {
-            acc = [
-                ...acc,
-                ...allPathsEnables[Number(i)].map(path => ({ path: path.path, position: path.position, stage: path.stage }))
-            ]
+        return Object.keys(allPathsEnables)
+            .reduce<IMapPath[]>((acc, i) => {
+                acc = [...acc, ...allPathsEnables[Number(i)].map(path => ({ path: path.path, position: path.position, stage: path.stage }))]
 
-            return acc
-        }, []).sort((a, b) => b.stage - a.stage).slice(0, animatronic.config.retreatPositionsTime)
+                return acc
+            }, [])
+            .sort((a, b) => b.stage - a.stage)
+            .slice(0, animatronic.config.retreatPositionsTime)
     }
 
     return {
-        getPathByAnimatronic
+        getPathByAnimatronic,
     }
 }

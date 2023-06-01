@@ -15,23 +15,40 @@ export function ObserverEvent(): ObserverEvent {
     }
 
     const emit: ObserverEvent['emit'] = <U extends IEventTypes, T extends IEventData<U>>(evt: U, data: IEvent<T>) => {
-        listeners.filter((_obs) => { return _obs.evt == evt }).forEach((_obs) => {
-            setTimeout(() => _obs.handler(data), 1)
-        })
+        setTimeout(() => {
+            listeners
+                .filter(_obs => {
+                    return _obs.evt == evt
+                })
+                .forEach(_obs => {
+                    setTimeout(() => _obs.handler(data), 1)
+                })
+        }, 1)
     }
 
-    const removeListener: ObserverEvent['removeListener'] = (code) => {
-        const index = listeners.findIndex((obs) => obs.code == code)
+    const removeListener: ObserverEvent['removeListener'] = code => {
+        const index = listeners.findIndex(obs => obs.code == code)
 
-        if (index < 0) { return }
+        if (index < 0) {
+            return
+        }
 
         listeners.splice(index, 1)
     }
 
-    const clearListeners: ObserverEvent['clearListeners'] = (main) => {
-        if (main) { return listeners.filter((ev) => ev.main).splice(0, listeners.length) }
+    const clearListeners: ObserverEvent['clearListeners'] = main => {
+        for (let i = listeners.length - 1; i >= 0; i--) {
+            if (listeners[i].main) {
+                if (main) {
+                    listeners.splice(i, 1)
+                }
 
-        return listeners.filter((ev) => !ev.main).splice(0, listeners.length)
+                continue
+            }
+            if (!main) {
+                listeners.splice(i, 1)
+            }
+        }
     }
 
     return {
