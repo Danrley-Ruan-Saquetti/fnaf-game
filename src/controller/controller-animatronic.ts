@@ -17,7 +17,6 @@ export function AnimatronicController(repo: TRepositoryGame) {
         return animatronics
     }
 
-    // # Use Case
     const getMapPaths = ({ animatronic }: { animatronic: IAnimatronic }) => {
         const paths: { [x: number]: IMapPath[] } = {}
 
@@ -80,7 +79,10 @@ export function AnimatronicController(repo: TRepositoryGame) {
             .slice(0, animatronic.config.retreatPositionsTime)
     }
 
+    // # Use Case
+    const moveAnimatronic = ({}: { animatronic: IAnimatronic }) => {}
+
     return {
-        getPathByAnimatronic,
+        moveAnimatronic,
     }
 }

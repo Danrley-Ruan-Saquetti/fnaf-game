@@ -1,4 +1,4 @@
-import { ICamera, TCamera } from '../@types/camera'
+import { ICamera } from '../@types/camera'
 import { TLight, TPort } from '../@types/desk'
 import { TRepositoryGame } from '../@types/game'
 import { ObserverEvent } from '../@types/observer'

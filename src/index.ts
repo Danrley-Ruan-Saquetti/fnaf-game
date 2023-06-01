@@ -204,9 +204,7 @@ const SETUP_GAME: GameConfig = {
 }
 
 function App() {
-    const gameController = GameController(SETUP_GAME)
-
-    const game = gameController.newGame()
+    const game = GameController(SETUP_GAME)
 
     const MAP_EVENT_ACTIONS: { [x in string]: () => void } = {
         s: () => game.toggleCamera(),
@@ -218,6 +216,10 @@ function App() {
     }
 
     game.startNight()
+
+    setTimeout(() => {
+        game.quitGame()
+    }, 1000 * 5)
 
     game.on('game/start', ev => {})
     game.on('game/end-game', ev => {})
