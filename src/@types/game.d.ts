@@ -19,7 +19,7 @@ export interface IRepositoryDataGame {
 export type GameConfig = Omit<IRepositoryDataGame, 'running'>
 
 export interface TRepositoryGame {
-    data: IRepositoryDataGame;
+    getData: () => IRepositoryDataGame;
     reset: () => void;
     end: () => void;
     isRunning: () => boolean
@@ -71,5 +71,4 @@ export interface TRepositoryGame {
         hour: number;
     }) => number;
     getSettings: () => ISettingGame
-    getLightOpenDependent: () => boolean
 };

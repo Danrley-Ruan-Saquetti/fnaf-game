@@ -1,4 +1,4 @@
-import { ICamera } from '../@types/camera'
+import { ICamera, TCamera } from '../@types/camera'
 import { TLight, TPort } from '../@types/desk'
 import { TRepositoryGame } from '../@types/game'
 import { ObserverEvent } from '../@types/observer'
@@ -6,22 +6,26 @@ import { ObserverEvent } from '../@types/observer'
 export function DeskController(repo: TRepositoryGame, EventGame: { emit: ObserverEvent['emit'] }) {
     // # Util
     const getPortOpenDependent = () => {
-        return !!repo.data.desk.ports.find(port => !port.toggleIndependent && port.inRecharge)
+        return !!repo.getData().desk.ports.find(port => !port.toggleIndependent && port.inRecharge)
     }
 
-    const getPortsClosed = () => {
-        return repo.data.desk.ports.filter(port => !port.isOpen)
+    const getLightOpenDependent = () => {
+        return !!repo.getData().desk.lights.find(light => !light.toggleIndependent && light.inRecharge)
     }
 
-    const getLightsOn = () => {
-        return repo.data.desk.lights.filter(light => light.isOn)
+    const getPortsClosed = (args?: { exclude?: TPort['code'][] }) => {
+        return repo.getData().desk.ports.filter(ports => ports.isOpen && (!args || !args.exclude || !args.exclude.includes(ports.code)))
+    }
+
+    const getLightsOn = (args?: { exclude?: TLight['code'][] }) => {
+        return repo.getData().desk.lights.filter(light => light.isOn && (!args || !args.exclude || !args.exclude.includes(light.code)))
     }
 
     const rechargeCamera = ({ camera }: { camera: ICamera }) => {
         repo.updateCamera({ camera: { ...camera, inRecharge: true } })
 
         setTimeout(() => {
-            const { camera } = repo.data.desk
+            const { camera } = repo.getData().desk
 
             repo.updateCamera({ camera: { ...camera, inRecharge: false } })
         }, camera.recharge)
@@ -61,7 +65,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
             return
         }
 
-        if (repo.data.desk.camera.isOpen) {
+        if (repo.getData().desk.camera.isOpen) {
             return
         }
 
@@ -79,7 +83,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
             return
         }
 
-        getLightsOn().forEach(light => repoToggleLight({ light, value: false }))
+        getLightsOn().forEach(l => repoToggleLight({ light: l, value: false }))
 
         repoTogglePort({ port, value: !port.isOpen })
     }
@@ -89,7 +93,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
             return
         }
 
-        if (repo.data.desk.camera.isOpen) {
+        if (repo.getData().desk.camera.isOpen) {
             return
         }
 
@@ -99,11 +103,11 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
             return console.log('!!!!')
         }
 
-        if (repo.getSettings().desk.lights.toggleDependent && repo.getLightOpenDependent()) {
+        if (repo.getSettings().desk.lights.toggleDependent && getLightOpenDependent()) {
             return
         }
 
-        getLightsOn().forEach(light => {})
+        getLightsOn({ exclude: [light.code] }).forEach(l => repoToggleLight({ light: l, value: false }))
 
         repoToggleLight({ light, value: !light.isOn })
     }
@@ -113,24 +117,15 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
             return
         }
 
-        const { camera } = repo.data.desk
+        const { camera } = repo.getData().desk
 
         if (camera.inRecharge) {
             return
         }
 
-        camera.isOpen = !camera.isOpen
+        getLightsOn().forEach(l => repoToggleLight({ light: l, value: false }))
 
-        repo.updateCamera({ camera })
-
-        rechargeCamera({ camera })
-
-        const data = { data: camera, message: `Camera ${camera.isOpen ? 'on' : 'off'}` }
-        EventGame.emit('desk/camera/toggle', data)
-
-        /* eslint  no-unused-expressions: ["off"] */
-        camera.isOpen && EventGame.emit('desk/camera/open', data)
-        !camera.isOpen && EventGame.emit('desk/camera/close', data)
+        repoToggleCamera({ camera, value: !camera.isOpen })
     }
 
     // Repo
@@ -148,6 +143,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
 
         const data = { data: light, message: `Light "${lightUpdated.code}" ${lightUpdated.isOn ? 'on' : 'off'}` }
         EventGame.emit('desk/lights/toggle', data)
+        /* eslint no-unused-expressions: ["off"] */
         lightUpdated.isOn && EventGame.emit('desk/lights/on', data)
         !lightUpdated.isOn && EventGame.emit('desk/lights/off', data)
 
@@ -172,6 +168,26 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
         !portUpdated.isOpen && EventGame.emit('desk/ports/close', data)
 
         return portUpdated
+    }
+
+    const repoToggleCamera = ({ camera, value }: { camera: ICamera; value: boolean }) => {
+        camera.isOpen = value
+
+        const cameraUpdated = repo.updateCamera({ camera })
+
+        if (!cameraUpdated) {
+            console.log('!!!!')
+            return null
+        }
+
+        rechargeCamera({ camera })
+
+        const data = { data: camera, message: `Camera ${camera.isOpen ? 'on' : 'off'}` }
+        EventGame.emit('desk/camera/toggle', data)
+        camera.isOpen && EventGame.emit('desk/camera/open', data)
+        !camera.isOpen && EventGame.emit('desk/camera/close', data)
+
+        return cameraUpdated
     }
 
     return {

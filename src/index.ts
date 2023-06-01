@@ -199,6 +199,7 @@ const SETUP_GAME: GameConfig = {
             ports: { toggleDependent: true },
             lights: { toggleDependent: true },
         },
+        log: true,
     },
 }
 
@@ -218,16 +219,16 @@ function App() {
 
     game.startNight()
 
-    game.on('game/start', ev => console.log(ev))
-    game.on('game/end-game', ev => console.log(ev))
-    game.on('desk/camera/close', ev => console.log(ev))
-    game.on('desk/camera/open', ev => console.log(ev))
+    game.on('game/start', ev => {})
+    game.on('game/end-game', ev => {})
+    game.on('desk/camera/close', ev => {})
+    game.on('desk/camera/open', ev => {})
     game.on('desk/camera/toggle', ev => {})
-    game.on('desk/lights/off', ev => console.log(ev))
-    game.on('desk/lights/on', ev => console.log(ev))
+    game.on('desk/lights/off', ev => {})
+    game.on('desk/lights/on', ev => {})
     game.on('desk/lights/toggle', ev => {})
-    game.on('desk/ports/close', ev => console.log(ev))
-    game.on('desk/ports/open', ev => console.log(ev))
+    game.on('desk/ports/close', ev => {})
+    game.on('desk/ports/open', ev => {})
     game.on('desk/ports/toggle', ev => {})
 
     addEventListener('keydown', ({ key }) => {

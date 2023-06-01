@@ -31,6 +31,8 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     // # Game
+    const getData = () => data
+
     const reset = () => {
         data.animatronics = []
         data.desk = {
@@ -110,10 +112,6 @@ export function RepositoryGame(): TRepositoryGame {
         data.desk.lights[index] = { ...light, code: where.code }
 
         return data.desk.lights[index]
-    }
-
-    const getLightOpenDependent = () => {
-        return !!data.desk.lights.find(light => !light.toggleIndependent && light.inRecharge)
     }
 
     // ## Port
@@ -213,7 +211,7 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     return {
-        data,
+        getData,
         reset,
         start,
         getPort,
@@ -232,6 +230,5 @@ export function RepositoryGame(): TRepositoryGame {
         end,
         isRunning,
         getSettings,
-        getLightOpenDependent,
     }
 }

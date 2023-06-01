@@ -6,13 +6,13 @@ type IMapPath = { position: number; path: number; stage: number }
 export function AnimatronicController(repo: TRepositoryGame) {
     // # Util
     const getAnimatronicByPosition = ({ position }: { position: number }) => {
-        const animatronic = repo.data.animatronics.find(anima => anima.currentPosition.position == position) || null
+        const animatronic = repo.getData().animatronics.find(anima => anima.currentPosition.position == position) || null
 
         return animatronic
     }
 
     const getAnimatronicsByPosition = ({ position }: { position: number }) => {
-        const animatronics = repo.data.animatronics.filter(anima => anima.currentPosition.position == position)
+        const animatronics = repo.getData().animatronics.filter(anima => anima.currentPosition.position == position)
 
         return animatronics
     }

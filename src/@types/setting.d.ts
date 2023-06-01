@@ -1,3 +1,5 @@
+import { IEventTypes } from "./event"
+
 export interface ISettingGame {
     desk: {
         ports: {
@@ -7,5 +9,6 @@ export interface ISettingGame {
             toggleDependent: boolean
         }
     }
-    FPS: number
+    FPS: number,
+    log?: IEventTypes[] | boolean
 }
