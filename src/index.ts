@@ -1,5 +1,4 @@
-import { GameConfig } from './@types/game.js'
-import { GameController } from './controller/controller-game.js'
+import { GameConfig, AppGame } from './lib/fnaf/index.js'
 
 const SETUP_GAME: GameConfig = {
     night: 1,
@@ -204,7 +203,7 @@ const SETUP_GAME: GameConfig = {
 }
 
 function App() {
-    const game = GameController(SETUP_GAME)
+    const game = AppGame(SETUP_GAME)
 
     const MAP_EVENT_ACTIONS: { [x in string]: () => void } = {
         s: () => game.toggleCamera(),

@@ -1,5 +1,5 @@
 import { IEvent, IEventData, IEventTypes } from '../@types/event'
-import { GameConfig } from '../@types/game'
+import { GameConfig, TRepositoryGame } from '../@types/game'
 import { RepositoryGame } from '../repository/repository-game.js'
 import { ObserverEvent } from '../util/observer.js'
 import { AnimatronicController } from './controller-animatronic.js'
