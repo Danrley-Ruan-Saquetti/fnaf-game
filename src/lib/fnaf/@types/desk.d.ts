@@ -9,6 +9,7 @@ export type TLight = IRecharge & {
     position: number
     config: {
         toggleIndependentOfPort?: boolean
+        usage: number
     }
 }
 
@@ -18,6 +19,9 @@ export type TPort = IRecharge & {
     blocked?: boolean
     position: number
     toggleIndependent?: boolean
+    config: {
+        usage: number
+    }
 }
 
 export interface IDesk {

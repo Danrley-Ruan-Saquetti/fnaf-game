@@ -15,6 +15,7 @@ export function RepositoryGame(): TRepositoryGame {
                 map: [],
                 recharge: 0,
                 inRecharge: false,
+                config: { usage: 0 },
             },
             battery: 0,
             hour: 0,
@@ -23,6 +24,7 @@ export function RepositoryGame(): TRepositoryGame {
         running: false,
         settings: {
             FPS: 0,
+            FPS_USAGE_BATTERY: 0,
             desk: {
                 ports: { toggleDependent: false },
                 lights: { toggleDependent: false },
@@ -44,6 +46,7 @@ export function RepositoryGame(): TRepositoryGame {
                 cameraActive: 0,
                 recharge: 0,
                 inRecharge: false,
+                config: { usage: 0 },
             },
             battery: 0,
             hour: 0,
@@ -52,6 +55,7 @@ export function RepositoryGame(): TRepositoryGame {
         data.running = false
         data.settings = {
             FPS: 0,
+            FPS_USAGE_BATTERY: 0,
             desk: {
                 ports: { toggleDependent: false },
                 lights: { toggleDependent: false },
@@ -60,11 +64,11 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     const start = (dataStart: Omit<IRepositoryDataGame, 'running'>) => {
-        data.animatronics = dataStart.animatronics
-        data.desk = dataStart.desk
+        data.animatronics = [...dataStart.animatronics]
+        data.desk = { ...dataStart.desk }
         data.night = dataStart.night
         data.running = true
-        data.settings = dataStart.settings
+        data.settings = { ...dataStart.settings }
     }
 
     const end = () => {
@@ -205,7 +209,6 @@ export function RepositoryGame(): TRepositoryGame {
     }
 
     // # Setting
-
     const getSettings = () => {
         return data.settings
     }

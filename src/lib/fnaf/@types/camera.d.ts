@@ -9,4 +9,7 @@ export interface ICamera extends IRecharge {
     isOpen: boolean
     cameraActive: number
     map: TCamera[]
+    config: {
+        usage: number
+    }
 }

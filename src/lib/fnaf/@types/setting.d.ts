@@ -1,4 +1,4 @@
-import { IEventTypes } from "./event"
+import { IEventTypes } from './event'
 
 export interface ISettingGame {
     desk: {
@@ -10,5 +10,6 @@ export interface ISettingGame {
         }
     }
     FPS: number,
+    FPS_USAGE_BATTERY: number
     log?: IEventTypes[] | boolean
 }

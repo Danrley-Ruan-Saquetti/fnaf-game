@@ -1,9 +1,9 @@
 import { ICamera } from '../@types/camera'
 import { TLight, TPort } from '../@types/desk'
 import { TRepositoryGame } from '../@types/game'
-import { ObserverEvent } from '../@types/observer'
+import { ObserverEventModel } from '../@types/observer'
 
-export function DeskController(repo: TRepositoryGame, EventGame: { emit: ObserverEvent['emit'] }) {
+export function DeskController(repo: TRepositoryGame, EventGame: { emit: ObserverEventModel['emit'] }) {
     // # Util
     const getPortOpenDependent = () => {
         return !!repo.getData().desk.ports.find(port => !port.toggleIndependent && port.inRecharge)
@@ -14,7 +14,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
     }
 
     const getPortsClosed = (args?: { exclude?: TPort['code'][] }) => {
-        return repo.getData().desk.ports.filter(ports => ports.isOpen && (!args || !args.exclude || !args.exclude.includes(ports.code)))
+        return repo.getData().desk.ports.filter(ports => !ports.isOpen && (!args || !args.exclude || !args.exclude.includes(ports.code)))
     }
 
     const getLightsOn = (args?: { exclude?: TLight['code'][] }) => {
@@ -60,6 +60,8 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
     }
 
     // # Use Case
+
+    // ## Port
     const togglePort = ({ code }: { code: string }) => {
         if (!repo.isRunning()) {
             return
@@ -88,6 +90,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
         repoTogglePort({ port, value: !port.isOpen })
     }
 
+    // ## Light
     const toggleLight = ({ code }: { code: string }) => {
         if (!repo.isRunning()) {
             return
@@ -112,6 +115,7 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
         repoToggleLight({ light, value: !light.isOn })
     }
 
+    // ## Camera
     const toggleCamera = () => {
         if (!repo.isRunning()) {
             return
@@ -126,6 +130,18 @@ export function DeskController(repo: TRepositoryGame, EventGame: { emit: Observe
         getLightsOn().forEach(l => repoToggleLight({ light: l, value: false }))
 
         repoToggleCamera({ camera, value: !camera.isOpen })
+    }
+
+    // ## Battery
+    const getUsage = () => {
+        const componentsUsage: { name: string; type: string; usage: number }[] = [
+            ...getLightsOn().map(light => ({ name: light.code, type: 'light', usage: light.config.usage })),
+            ...getPortsClosed().map(port => ({ name: port.code, type: 'port', usage: port.config.usage })),
+        ]
+
+        repo.getData().desk.camera.isOpen && componentsUsage.push({ name: 'camera', type: 'camera', usage: repo.getData().desk.camera.config.usage })
+
+        console.log(componentsUsage)
     }
 
     // Repo

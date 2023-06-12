@@ -1,10 +1,10 @@
 import { IEvent, IEventData, IEventTypes } from '../@types/event'
-import { GameConfig, TRepositoryGame } from '../@types/game'
+import { GameConfig } from '../@types/game'
 import { RepositoryGame } from '../repository/repository-game.js'
 import { ObserverEvent } from '../util/observer.js'
 import { AnimatronicController } from './controller-animatronic.js'
 import { DeskController } from './controller-desk.js'
-import { RunningGame } from './running-game.js'
+import { Running } from './running.js'
 
 export function GameController(gameConfig: GameConfig) {
     const repoGame = RepositoryGame()
@@ -12,7 +12,8 @@ export function GameController(gameConfig: GameConfig) {
 
     const animatronicController = AnimatronicController(repoGame)
     const deskController = DeskController(repoGame, { emit: observer.emit })
-    const runningGame = RunningGame({ repo: repoGame, desk: deskController, animatroic: animatronicController, emit: observer.emit })
+    const runningGame = Running({ repo: repoGame, obs: observer })
+    const runningUsage = Running({ repo: repoGame, obs: observer })
 
     // Data
     const getData = () => {
@@ -171,28 +172,42 @@ export function GameController(gameConfig: GameConfig) {
             },
             true
         )
+
+        console.log(repoGame.getSettings())
+
+        runningGame.setup(repoGame.getSettings().FPS)
+        runningUsage.setup(repoGame.getSettings().FPS_USAGE_BATTERY)
+
+        runningGame.on('game/update', update)
+        runningUsage.on('game/update', updateUsage)
     }
 
     const startNight = (night?: number) => {
-        setup()
-
         repoGame.start(gameConfig)
         repoGame.setNight(night || repoGame.getData().night)
 
-        runningGame.start(update)
+        setup()
 
         observer.emit('game/start', { data: repoGame.getData(), message: 'Game Start' })
     }
 
     const quitGame = () => {
-        runningGame.end()
+        if (!repoGame.isRunning()) {
+            return
+        }
+
+        repoGame.end()
 
         observer.emit('game/end-game', { data: repoGame.getData(), message: 'Game end' })
     }
 
     // Game
     const update = () => {
-        console.log('!')
+        observer.emit('game/update', { data: null, message: 'Game update' })
+    }
+
+    const updateUsage = () => {
+        observer.emit('desk/battery/update', { data: null, message: 'Battery update' })
     }
 
     return {

@@ -11,6 +11,8 @@ export interface IEvent<T> {
 export type IEventTypes =
     'game/start'
     | 'game/end-game'
+    | 'game/update'
+    | 'desk/battery/update'
     | 'desk/ports/toggle'
     | 'desk/ports/open'
     | 'desk/ports/close'
@@ -39,6 +41,10 @@ export type IEventData<E extends IEventTypes> = E extends 'desk/camera/close'
     ? TLight
     : E extends 'desk/lights/toggle'
     ? TLight
+    : E extends 'game/update'
+    ? null
+    : E extends 'desk/battery/update'
+    ? null
     : E extends 'game/start'
     ? IRepositoryDataGame
     : E extends 'game/end-game'

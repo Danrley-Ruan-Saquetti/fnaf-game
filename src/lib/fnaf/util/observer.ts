@@ -1,11 +1,11 @@
 import { IEvent, IEventTypes, IEventData } from './../@types/event'
-import { ObserverEvent } from './../@types/observer.d'
+import { ObserverEventModel } from './../@types/observer.d'
 import { randomId } from './random-id.js'
 
-export function ObserverEvent(): ObserverEvent {
-    const listeners: ObserverEvent['listeners'] = []
+export function ObserverEvent(): ObserverEventModel {
+    const listeners: ObserverEventModel['listeners'] = []
 
-    const on: ObserverEvent['on'] = <E extends IEventTypes>(evt: E, handler: <T extends IEventData<E>>(data: IEvent<T>) => void, main?: boolean) => {
+    const on: ObserverEventModel['on'] = <E extends IEventTypes>(evt: E, handler: <T extends IEventData<E>>(data: IEvent<T>) => void, main?: boolean) => {
         const code = randomId()
 
         // @ts-expect-error
@@ -14,7 +14,7 @@ export function ObserverEvent(): ObserverEvent {
         return code
     }
 
-    const emit: ObserverEvent['emit'] = <U extends IEventTypes, T extends IEventData<U>>(evt: U, data: IEvent<T>) => {
+    const emit: ObserverEventModel['emit'] = <U extends IEventTypes, T extends IEventData<U>>(evt: U, data: IEvent<T>) => {
         setTimeout(() => {
             listeners
                 .filter(_obs => {
@@ -26,7 +26,7 @@ export function ObserverEvent(): ObserverEvent {
         }, 1)
     }
 
-    const removeListener: ObserverEvent['removeListener'] = code => {
+    const removeListener: ObserverEventModel['removeListener'] = code => {
         const index = listeners.findIndex(obs => obs.code == code)
 
         if (index < 0) {
@@ -36,7 +36,7 @@ export function ObserverEvent(): ObserverEvent {
         listeners.splice(index, 1)
     }
 
-    const clearListeners: ObserverEvent['clearListeners'] = main => {
+    const clearListeners: ObserverEventModel['clearListeners'] = main => {
         for (let i = listeners.length - 1; i >= 0; i--) {
             if (listeners[i].main) {
                 if (main) {
